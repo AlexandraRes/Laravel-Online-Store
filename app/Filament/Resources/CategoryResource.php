@@ -31,7 +31,7 @@ use Filament\Resources\Concerns\Translatable;
 class CategoryResource extends Resource
 {
     use Translatable;
-    
+
     protected static ?string $model = Category::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-tag';
@@ -42,6 +42,16 @@ class CategoryResource extends Resource
 
     protected static ?int $navigationSort = 2;
 
+    public static function getModelLabel(): string
+    {
+        return __('resource.category.title.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resource.category.title.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -51,12 +61,14 @@ class CategoryResource extends Resource
                         Grid::make()
                             ->schema([
                                 TextInput::make('name')
+                                    ->label(__('resource.shared.fields.name'))
                                     ->required()
                                     ->maxLength(255)
                                     ->live(onBlur: true)
                                     ->afterStateUpdated(fn(string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
 
                                 TextInput::make('slug')
+                                    ->label(__('resource.shared.fields.slug'))
                                     ->required()
                                     ->maxLength(255)
                                     ->disabled()
@@ -66,10 +78,12 @@ class CategoryResource extends Resource
                             ]),
 
                         FileUpload::make('image')
+                            ->label(__('resource.shared.fields.image'))
                             ->image()
                             ->directory('categories'),
 
                         Toggle::make('is_active')
+                            ->label(__('resource.shared.fields.is_active'))
                             ->required()
                             ->default(true),
                     ]
@@ -82,22 +96,28 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('resource.shared.fields.name'))
                     ->searchable(),
 
-                ImageColumn::make('image'),
+                ImageColumn::make('image')
+                    ->label(__('resource.shared.fields.image')),
 
                 TextColumn::make('slug')
+                    ->label(__('resource.shared.fields.slug'))
                     ->searchable(),
 
                 IconColumn::make('is_active')
+                    ->label(__('resource.shared.fields.is_active'))
                     ->boolean(),
 
                 TextColumn::make('created_at')
+                    ->label(__('resource.shared.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
+                    ->label(__('resource.shared.fields.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -107,14 +127,21 @@ class CategoryResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
-                    DeleteAction::make(),
-                ])
+                    ViewAction::make()
+                        ->label(__('resource.shared.fields.view')),
+                    EditAction::make()
+                        ->label(__('resource.shared.fields.edit')),
+                    DeleteAction::make()
+                        ->label(__('resource.shared.fields.delete')),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label(__('resource.shared.bulk.delete'))
+                        ->modalHeading(__('resource.shared.bulk.delete_heading'))
+                        ->modalDescription(__('resource.shared.bulk.delete_description'))
+                        ->successNotificationTitle(__('resource.shared.bulk.delete_success')),
                 ]),
             ]);
     }

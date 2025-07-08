@@ -42,6 +42,16 @@ class ProductResource extends Resource
 
     protected static ?int $navigationSort = 3;
 
+    public static function getModelLabel(): string
+    {
+        return __('resource.product.title.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resource.product.title.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
@@ -50,12 +60,14 @@ class ProductResource extends Resource
                 Group::make()->schema([
                     Section::make('Product Information')->schema([
                         TextInput::make('name')
+                            ->label(__('resource.shared.fields.name'))
                             ->required()
                             ->maxLength(255)
                             ->live(onBlur: true)
                             ->afterStateUpdated(fn(string $operation, $state, Set $set) => $operation === 'create' ? $set('slug', Str::slug($state)) : null),
 
                         TextInput::make('slug')
+                            ->label(__('resource.shared.fields.slug'))
                             ->required()
                             ->maxLength(255)
                             ->disabled()
@@ -136,6 +148,7 @@ class ProductResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('resource.shared.fields.name'))
                     ->searchable(),
 
                 TextColumn::make('category.name')
@@ -158,14 +171,17 @@ class ProductResource extends Resource
                     ->boolean(),
 
                 IconColumn::make('is_active')
+                    ->label(__('resource.shared.fields.is_active'))
                     ->boolean(),
 
                 TextColumn::make('created_at')
+                    ->label(__('resource.shared.fields.is_active'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
+                    ->label(__('resource.shared.fields.updated_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -179,14 +195,21 @@ class ProductResource extends Resource
             ])
             ->actions([
                 ActionGroup::make([
-                    ViewAction::make(),
-                    EditAction::make(),
-                    DeleteAction::make(),
-                ])
+                    ViewAction::make()
+                        ->label(__('resource.shared.fields.view')),
+                    EditAction::make()
+                        ->label(__('resource.shared.fields.edit')),
+                    DeleteAction::make()
+                        ->label(__('resource.shared.fields.delete')),
+                ]),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label(__('resource.shared.bulk.delete'))
+                        ->modalHeading(__('resource.shared.bulk.delete_heading'))
+                        ->modalDescription(__('resource.shared.bulk.delete_description'))
+                        ->successNotificationTitle(__('resource.shared.bulk.delete_success')),
                 ]),
             ]);
     }
