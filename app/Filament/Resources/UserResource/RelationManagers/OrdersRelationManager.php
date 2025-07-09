@@ -13,9 +13,12 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Resources\RelationManagers\Concerns\Translatable;
 
 class OrdersRelationManager extends RelationManager
 {
+    use Translatable;
+
     protected static string $relationship = 'orders';
 
     public function form(Form $form): Form
@@ -29,22 +32,26 @@ class OrdersRelationManager extends RelationManager
     public function table(Table $table): Table
     {
         return $table
+            ->heading(__('resource.order.title.plural'))
             ->recordTitleAttribute('id')
 
             ->columns([
                 TextColumn::make('id')
-                    ->label('Order ID')
+                    ->label(__('resource.shared.fields.id'))
                     ->searchable(),
 
                 TextColumn::make('created_at')
+                    ->label(__('resource.shared.fields.created_at'))
                     ->dateTime()
                     ->sortable(),
 
                 TextColumn::make('user.name')
+                    ->label(__('resource.shared.fields.user_name'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('status')
+                    ->label(__('resource.shared.fields.status'))
                     ->sortable()
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
@@ -53,6 +60,7 @@ class OrdersRelationManager extends RelationManager
                         'shipped', 'delivered' => 'success',
                         'canceled' => 'danger',
                     })
+                    ->formatStateUsing(fn(string $state) => __('resource.order.status.' . $state))
                     ->icon(fn(string $state): string => match ($state) {
                         'new' => 'heroicon-m-sparkles',
                         'processing' => 'heroicon-m-arrow-path',
@@ -62,10 +70,12 @@ class OrdersRelationManager extends RelationManager
                     }),
 
                 TextColumn::make('payment_method')
+                    ->label(__('resource.shared.fields.payment_method'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('payment_status')
+                    ->label(__('resource.shared.fields.payment_status'))
                     ->searchable()
                     ->sortable()
                     ->badge()
@@ -74,6 +84,7 @@ class OrdersRelationManager extends RelationManager
                         'paid' => 'success',
                         'failed' => 'danger',
                     })
+                    ->formatStateUsing(fn(string $state) => __('resource.order.payment_status.' . $state))
                     ->icon(fn(string $state): string => match ($state) {
                         'pending' => 'heroicon-m-arrow-path',
                         'paid' => 'heroicon-m-check-badge',
@@ -81,6 +92,7 @@ class OrdersRelationManager extends RelationManager
                     }),
 
                 TextColumn::make('grand_total')
+                    ->label(__('resource.shared.fields.grand_total'))
                     ->numeric()
                     ->money('MDL')
                     ->sortable()
@@ -90,6 +102,7 @@ class OrdersRelationManager extends RelationManager
             ])
             ->headerActions([
                 Action::make('new_order')
+                    ->label(__('resource.order.new_order'))
                     ->icon('heroicon-o-plus-circle')
                     ->action(function () {
 
@@ -100,8 +113,8 @@ class OrdersRelationManager extends RelationManager
                     })
             ])
             ->actions([
-
                 Tables\Actions\EditAction::make()
+                    ->label(__('resource.shared.fields.edit'))
                     ->url(function ($record) {
 
                         session()->put('orders.return_url', url()->previous());
@@ -109,12 +122,16 @@ class OrdersRelationManager extends RelationManager
 
                     })
                     ->openUrlInNewTab(false),
-
-                Tables\Actions\DeleteAction::make(),
+                Tables\Actions\DeleteAction::make()
+                    ->label(__('resource.shared.fields.delete')),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label(__('resource.shared.bulk.delete'))
+                        ->modalHeading(__('resource.shared.bulk.delete_heading'))
+                        ->modalDescription(__('resource.shared.bulk.delete_description'))
+                        ->successNotificationTitle(__('resource.shared.bulk.delete_success')),
                 ]),
             ]);
     }

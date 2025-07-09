@@ -19,6 +19,10 @@ use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Actions\ActionGroup;
+use Filament\Tables\Actions\ViewAction;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
 
 class UserResource extends Resource
 {
@@ -30,25 +34,37 @@ class UserResource extends Resource
 
     protected static ?int $navigationSort = 1;
 
+    public static function getModelLabel(): string
+    {
+        return __('resource.user.title.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resource.user.title.plural');
+    }
+
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
                 TextInput::make('name')
+                    ->label(__('resource.shared.fields.name'))
                     ->required(),
 
                 TextInput::make('email')
+                    ->label(__('resource.shared.fields.email'))
                     ->required()
                     ->email()
-                    ->label('Email Address')
                     ->maxLength(255)
                     ->unique(User::class, 'email', ignoreRecord: true),
 
                 DateTimePicker::make('email_verified_at')
-                    ->label('Email Verified At')
+                    ->label(__('resource.shared.fields.email_verified_at'))
                     ->default(now()),
 
                 TextInput::make('password')
+                    ->label(__('resource.shared.fields.password'))
                     ->password()
                     ->dehydrated(fn($state) => filled($state))
                     ->required(fn(Page $livewire): bool => $livewire instanceof CreateRecord)
@@ -60,17 +76,21 @@ class UserResource extends Resource
         return $table
             ->columns([
                 TextColumn::make('name')
+                    ->label(__('resource.shared.fields.name'))
                     ->searchable(),
 
                 TextColumn::make('email')
+                    ->label(__('resource.shared.fields.email'))
                     ->searchable(),
 
                 TextColumn::make('email_verified_at')
+                    ->label(__('resource.shared.fields.email_verified_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
+                    ->label(__('resource.shared.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -79,16 +99,23 @@ class UserResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\ActionGroup::make([
-                    Tables\Actions\ViewAction::make(),
-                    Tables\Actions\EditAction::make(),
-                    Tables\Actions\DeleteAction::make(),
-                ])
+                ActionGroup::make([
+                    ViewAction::make()
+                        ->label(__('resource.shared.fields.view')),
+                    EditAction::make()
+                        ->label(__('resource.shared.fields.edit')),
+                    DeleteAction::make()
+                        ->label(__('resource.shared.fields.delete')),
+                ]),
             ])
             ->bulkActions([
-                BulkActionGroup::make([
-                    Tables\Actions\DeleteBulkAction::make(),
-                ])
+                Tables\Actions\BulkActionGroup::make([
+                    Tables\Actions\DeleteBulkAction::make()
+                        ->label(__('resource.shared.bulk.delete'))
+                        ->modalHeading(__('resource.shared.bulk.delete_heading'))
+                        ->modalDescription(__('resource.shared.bulk.delete_description'))
+                        ->successNotificationTitle(__('resource.shared.bulk.delete_success')),
+                ]),
             ]);
     }
 

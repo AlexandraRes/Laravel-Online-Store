@@ -38,7 +38,10 @@ class CategoryResource extends Resource
 
     protected static ?string $recordTitleAttribute = 'name';
 
-    protected static ?string $navigationGroup = 'Content';
+    public static function getNavigationGroup(): ?string
+    {
+         return __('resource.shared.navigation.content');
+    }
 
     protected static ?int $navigationSort = 2;
 
@@ -128,9 +131,11 @@ class CategoryResource extends Resource
             ->actions([
                 ActionGroup::make([
                     ViewAction::make()
-                        ->label(__('resource.shared.fields.view')),
+                        ->label(__('resource.shared.fields.view'))
+                        ->color('info'),
                     EditAction::make()
-                        ->label(__('resource.shared.fields.edit')),
+                        ->label(__('resource.shared.fields.edit'))
+                        ->color('success'),
                     DeleteAction::make()
                         ->label(__('resource.shared.fields.delete')),
                 ]),

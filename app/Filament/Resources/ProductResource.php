@@ -38,7 +38,10 @@ class ProductResource extends Resource
 
     protected static ?string $navigationIcon = 'heroicon-o-squares-2x2';
 
-    protected static ?string $navigationGroup = 'Content';
+    public static function getNavigationGroup(): ?string
+    {
+         return __('resource.shared.navigation.content');
+    }
 
     protected static ?int $navigationSort = 3;
 
@@ -58,7 +61,7 @@ class ProductResource extends Resource
             ->schema([
 
                 Group::make()->schema([
-                    Section::make('Product Information')->schema([
+                    Section::make(__('resource.shared.sections.product_information'))->schema([
                         TextInput::make('name')
                             ->label(__('resource.shared.fields.name'))
                             ->required()
@@ -75,6 +78,7 @@ class ProductResource extends Resource
                             ->unique(Product::class, 'slug', ignoreRecord: true),
 
                         MarkdownEditor::make('description')
+                            ->label(__('resource.shared.fields.description'))
                             ->columnSpanFull()
                             ->fileAttachmentsDirectory('products'),
 
@@ -83,22 +87,24 @@ class ProductResource extends Resource
                 ])->columnSpan(2),
 
                 Group::make()->schema([
-                    Section::make('Price')->schema([
+                    Section::make(__('resource.shared.sections.price'))->schema([
                         TextInput::make('price')
+                            ->label(__('resource.shared.fields.price'))
                             ->required()
                             ->numeric()
                             ->prefix('MDL'),
-
                     ]),
 
-                    Section::make('Associations')->schema([
+                    Section::make(__('resource.shared.sections.associations'))->schema([
                         Select::make('category_id')
+                            ->label(__('resource.shared.fields.category'))
                             ->required()
                             ->searchable()
                             ->preload()
                             ->relationship('category', 'name'),
 
                         Select::make('brand_id')
+                            ->label(__('resource.shared.fields.brand'))
                             ->required()
                             ->searchable()
                             ->preload()
@@ -108,11 +114,10 @@ class ProductResource extends Resource
                 ])->columnSpan(1)
                     ->extraAttributes(['class' => 'h-full flex']),
 
-
-
                 Group::make()->schema([
-                    Section::make('Images')->schema([
+                    Section::make(__('resource.shared.sections.images'))->schema([
                         FileUpload::make('images')
+                            ->label(__('resource.shared.fields.images'))
                             ->multiple()
                             ->directory('products')
                             ->maxFiles(5)
@@ -122,19 +127,23 @@ class ProductResource extends Resource
                 ])->columnSpan(2),
 
                 Group::make()->schema([
-                    Section::make('Status')->schema([
+                    Section::make(__('resource.shared.sections.status'))->schema([
                         Toggle::make('in_stock')
+                            ->label(__('resource.shared.fields.in_stock'))
                             ->required()
                             ->default(true),
 
                         Toggle::make('is_active')
+                            ->label(__('resource.shared.fields.is_active'))
                             ->required()
                             ->default(true),
 
                         Toggle::make('is_featured')
+                            ->label(__('resource.shared.fields.is_featured'))
                             ->required(),
 
                         Toggle::make('on_sale')
+                            ->label(__('resource.shared.fields.on_sale'))
                             ->required(),
                     ])
 
@@ -152,22 +161,28 @@ class ProductResource extends Resource
                     ->searchable(),
 
                 TextColumn::make('category.name')
+                    ->label(__('resource.shared.fields.category'))
                     ->sortable(),
 
                 TextColumn::make('brand.name')
+                    ->label(__('resource.shared.fields.brand'))
                     ->sortable(),
 
                 TextColumn::make('price')
+                    ->label(__('resource.shared.fields.price'))
                     ->money('MDL')
                     ->sortable(),
 
                 IconColumn::make('is_featured')
+                    ->label(__('resource.shared.fields.is_featured'))
                     ->boolean(),
 
                 IconColumn::make('on_sale')
+                    ->label(__('resource.shared.fields.on_sale'))
                     ->boolean(),
 
                 IconColumn::make('in_stock')
+                    ->label(__('resource.shared.fields.in_stock'))
                     ->boolean(),
 
                 IconColumn::make('is_active')
@@ -175,7 +190,7 @@ class ProductResource extends Resource
                     ->boolean(),
 
                 TextColumn::make('created_at')
-                    ->label(__('resource.shared.fields.is_active'))
+                    ->label(__('resource.shared.fields.created_at'))
                     ->dateTime()
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
@@ -196,9 +211,11 @@ class ProductResource extends Resource
             ->actions([
                 ActionGroup::make([
                     ViewAction::make()
-                        ->label(__('resource.shared.fields.view')),
+                        ->label(__('resource.shared.fields.view'))
+                        ->color('info'),
                     EditAction::make()
-                        ->label(__('resource.shared.fields.edit')),
+                        ->label(__('resource.shared.fields.edit'))
+                        ->color('success'),
                     DeleteAction::make()
                         ->label(__('resource.shared.fields.delete')),
                 ]),

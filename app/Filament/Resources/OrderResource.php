@@ -34,14 +34,29 @@ use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Illuminate\Support\Number;
+use Filament\Resources\RelationManagers\Concerns\Translatable;
+
 
 class OrderResource extends Resource
 {
+
+    use Translatable;
+
     protected static ?string $model = Order::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-shopping-bag';
 
     protected static ?int $navigationSort = 2;
+
+    public static function getModelLabel(): string
+    {
+        return __('resource.order.title.singular');
+    }
+
+    public static function getPluralModelLabel(): string
+    {
+        return __('resource.order.title.plural');
+    }
 
     public static function form(Form $form): Form
     {
@@ -199,74 +214,96 @@ class OrderResource extends Resource
             ->defaultSort('created_at', 'desc')
             ->columns([
                 TextColumn::make('created_at')
-                    ->searchable()
+                    ->label(__('resource.shared.fields.created_at'))
                     ->sortable()
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
-                    ->searchable()
+                    ->label(__('resource.shared.fields.updated_at'))
                     ->sortable()
                     ->dateTime()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('user.name')
-                    ->label('Customer')
-                    ->searchable()
+                    ->label(__('resource.shared.fields.user_name'))
                     ->sortable(),
 
                 TextColumn::make('grand_total')
+                    ->label(__('resource.shared.fields.grand_total'))
                     ->sortable()
                     ->numeric()
                     ->money('MDL'),
 
                 TextColumn::make('payment_method')
-                    ->formatStateUsing(fn($state) => [
-                        'cod' => 'Cash On Delivery',
-                        'stripe' => 'Stripe',
-                    ][$state] ?? $state)
-                    ->searchable()
+                    ->label(__('resource.shared.fields.payment_method'))
+                    ->formatStateUsing(fn(string $state) => __('resource.order.payment_method.' . $state))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
-
                 TextColumn::make('payment_status')
-                    ->searchable()
+                    ->label(__('resource.shared.fields.payment_status'))
+                    ->color(fn(string $state): string => match ($state) {
+                        'pending' => 'warning',
+                        'paid' => 'success',
+                        'failed' => 'danger',
+                    })
+                    ->formatStateUsing(fn(string $state) => __('resource.order.payment_status.' . $state))
+                    ->icon(fn(string $state): string => match ($state) {
+                        'pending' => 'heroicon-m-arrow-path',
+                        'paid' => 'heroicon-m-check-badge',
+                        'failed' => 'heroicon-m-x-circle',
+                    })
                     ->sortable(),
 
                 TextColumn::make('currency')
-                    ->searchable()
+                    ->label(__('resource.shared.fields.currency'))
+                    ->formatStateUsing(fn(string $state): string => match ($state) {
+                        'mdl' => 'MDL',
+                        'rub' => 'RUB',
+                        'usd' => 'USD',
+                        'eur' => 'EUR'
+                    })
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('shipping_method')
-                    ->searchable()
+                    ->label(__('resource.shared.fields.shipping_method'))
+                    ->formatStateUsing(fn($state) => match ($state) {
+                        'fedex' => 'FedEx',
+                        'ups' => 'UPS',
+                        'dhl' => 'DHL',
+                        'usps' => 'USPS',
+                        'none' => '',
+                    })
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 SelectColumn::make('status')
+                    ->label(__('resource.shared.fields.status'))
                     ->options([
-                        'new' => 'New',
-                        'processing' => 'Processing',
-                        'shipped' => 'Shipped',
-                        'delivered' => 'Delivered',
-                        'canceled' => 'Canceled',
+                        'new' => __('resource.order.status.new'),
+                        'processing' => __('resource.order.status.processing'),
+                        'shipped' => __('resource.order.status.shipped'),
+                        'delivered' => __('resource.order.status.delivered'),
+                        'canceled' => __('resource.order.status.canceled'),
                     ])
-                    ->searchable()
                     ->sortable(),
 
             ])
             ->filters([
                 SelectFilter::make('user')
+                    ->label(__('resource.shared.fields.user_name'))
                     ->relationship('user', 'name'),
 
                 SelectFilter::make('status')
+                    ->label(__('resource.shared.fields.status'))
                     ->options([
-                        'new' => 'New',
-                        'processing' => 'Processing',
-                        'shipped' => 'Shipped',
-                        'delivered' => 'Delivered',
-                        'canceled' => 'Canceled',
+                        'new' => __('resource.order.status.new'),
+                        'processing' => __('resource.order.status.processing'),
+                        'shipped' => __('resource.order.status.shipped'),
+                        'delivered' => __('resource.order.status.delivered'),
+                        'canceled' => __('resource.order.status.canceled'),
                     ])
             ])
             ->actions([
