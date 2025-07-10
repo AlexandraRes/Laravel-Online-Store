@@ -191,21 +191,31 @@ class ProductResource extends Resource
 
                 TextColumn::make('created_at')
                     ->label(__('resource.shared.fields.created_at'))
-                    ->dateTime()
+                    ->formatStateUsing(
+                        fn($state) => $state
+                        ? \Carbon\Carbon::parse($state)->translatedFormat('d F, Y H:i:s')
+                        : null
+                    )
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
                     ->label(__('resource.shared.fields.updated_at'))
-                    ->dateTime()
+                    ->formatStateUsing(
+                        fn($state) => $state
+                        ? \Carbon\Carbon::parse($state)->translatedFormat('d F, Y H:i:s')
+                        : null
+                    )
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
             ])
             ->filters([
                 SelectFilter::make('category')
+                    ->label(__('resource.shared.fields.category'))
                     ->relationship('category', 'name'),
                 SelectFilter::make('brand')
+                    ->label(__('resource.shared.fields.brand'))
                     ->relationship('brand', 'name'),
             ])
             ->actions([

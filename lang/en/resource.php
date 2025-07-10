@@ -29,8 +29,21 @@ return [
             'payment_method' => 'Payment Method',
             'payment_status' => 'Payment Status',
             'grand_total' => 'Grand Total',
-            'currency' => 'currency',
-            'shipping_method' => 'shipping_method',
+            'currency' => 'Currency',
+            'shipping_method' => 'Shipping method',
+            'notes' => 'Notes',
+            'items' => 'Items',
+            'item' => 'Item',
+            'quantity' => 'Quantity',
+            'unit_amount' => 'Unit amount',
+            'total_amount' => 'Total amount',
+            'full_name' => 'Full Name',
+            'first_name' => 'First name',
+            'last_name' => 'Last name',
+            'phone' => 'Phone',
+            'city' => 'City',
+            'state' => 'State',
+            'zip_code' => 'Zip code',
         ],
         'bulk' => [
             'delete' => 'Delete selected',
@@ -40,10 +53,13 @@ return [
         ],
         'sections' => [
             'product_information' => 'Product Information',
+            'order_information' => 'Order Information',
+            'order_items' => 'Ordered Items',
             'price' => 'Price',
             'associations' => 'Associations',
             'images' => 'Images',
             'status' => 'Status',
+            'address' => 'Address',
         ],
         'navigation' => [
             'content' => 'Content'
@@ -71,6 +87,12 @@ return [
         'title' => [
             'singular' => 'user',
             'plural' => 'Users',
+        ],
+    ],
+    'address' => [
+        'title' => [
+            'singular' => 'address',
+            'plural' => 'Addresses',
         ],
     ],
     'order' => [

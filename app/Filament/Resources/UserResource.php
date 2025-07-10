@@ -23,9 +23,14 @@ use Filament\Tables\Actions\ActionGroup;
 use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
+use Filament\Resources\RelationManagers\Concerns\Translatable;
+
 
 class UserResource extends Resource
 {
+
+    use Translatable;
+
     protected static ?string $model = User::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-user-group';
@@ -85,13 +90,21 @@ class UserResource extends Resource
 
                 TextColumn::make('email_verified_at')
                     ->label(__('resource.shared.fields.email_verified_at'))
-                    ->dateTime()
+                    ->formatStateUsing(
+                        fn($state) => $state
+                        ? \Carbon\Carbon::parse($state)->translatedFormat('d F, Y H:i:s')
+                        : null
+                    )
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('created_at')
                     ->label(__('resource.shared.fields.created_at'))
-                    ->dateTime()
+                    ->formatStateUsing(
+                        fn($state) => $state
+                        ? \Carbon\Carbon::parse($state)->translatedFormat('d F, Y H:i:s')
+                        : null
+                    )
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
             ])
@@ -101,9 +114,11 @@ class UserResource extends Resource
             ->actions([
                 ActionGroup::make([
                     ViewAction::make()
-                        ->label(__('resource.shared.fields.view')),
+                        ->label(__('resource.shared.fields.view'))
+                        ->color('info'),
                     EditAction::make()
-                        ->label(__('resource.shared.fields.edit')),
+                        ->label(__('resource.shared.fields.edit'))
+                        ->color('success'),
                     DeleteAction::make()
                         ->label(__('resource.shared.fields.delete')),
                 ]),

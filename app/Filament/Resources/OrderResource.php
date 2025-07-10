@@ -63,37 +63,42 @@ class OrderResource extends Resource
         return $form
             ->schema([
                 Group::make()->schema([
-                    Section::make('Order Information')->schema([
+                    Section::make(__('resource.shared.sections.order_information'))->schema([
                         Select::make('user_id')
+                            ->label(__('resource.shared.fields.name'))
                             ->required()
-                            ->label('Customer')
                             ->relationship('user', 'name')
                             ->searchable()
                             ->preload()
                             ->columnSpanFull(),
 
-                        Select::make('payment_method')->options([
-                            'stripe' => 'Stripe',
-                            'cod' => 'Cash On Delivery',
-                        ])
+                        Select::make('payment_method')
+                            ->label(__('resource.shared.fields.payment_method'))
+                            ->options([
+                                'stripe' => __('resource.order.payment_method.stripe'),
+                                'cod' => __('resource.order.payment_method.cod'),
+                            ])
                             ->required(),
 
-                        Select::make('payment_status')->options([
-                            'pending' => 'Pending',
-                            'paid' => 'Paid',
-                            'failed' => 'Failed',
+                        Select::make('payment_status')
+                            ->label(__('resource.shared.fields.payment_status'))
+                            ->options([
+                                'pending' => __('resource.order.payment_status.pending'),
+                                'paid' => __('resource.order.payment_status.paid'),
+                                'failed' => __('resource.order.payment_status.failed'),
 
-                        ])
+                            ])
                             ->required()
                             ->default('pending'),
 
                         ToggleButtons::make('status')
+                            ->label(__('resource.shared.fields.status'))
                             ->options([
-                                'new' => 'New',
-                                'processing' => 'Processing',
-                                'shipped' => 'Shipped',
-                                'delivered' => 'Delivered',
-                                'canceled' => 'Canceled',
+                                'new' => __('resource.order.status.new'),
+                                'processing' => __('resource.order.status.processing'),
+                                'shipped' => __('resource.order.status.shipped'),
+                                'delivered' => __('resource.order.status.delivered'),
+                                'canceled' => __('resource.order.status.canceled'),
                             ])
                             ->colors([
                                 'new' => 'info',
@@ -114,32 +119,39 @@ class OrderResource extends Resource
                             ->default('new')
                             ->columnSpanFull(),
 
-                        Select::make('currency')->options([
-                            'mdl' => 'MDL',
-                            'rub' => 'RUB',
-                            'usd' => 'USD',
-                            'eur' => 'EUR'
-                        ])
+                        Select::make('currency')
+                            ->label(__('resource.shared.fields.currency'))
+                            ->options([
+                                'mdl' => 'MDL',
+                                'rub' => 'RUB',
+                                'usd' => 'USD',
+                                'eur' => 'EUR'
+                            ])
                             ->required()
                             ->default('mdl')
                             ->placeholder('Select desiered option'),
 
-                        Select::make('shipping_method')->options([
-                            'fedex' => 'FedEx',
-                            'ups' => 'UPS',
-                            'dhl' => 'DHL',
-                            'usps' => 'USPS',
-                        ]),
+                        Select::make('shipping_method')
+                            ->label(__('resource.shared.fields.shipping_method'))
+                            ->options([
+                                'fedex' => 'FedEx',
+                                'ups' => 'UPS',
+                                'dhl' => 'DHL',
+                                'usps' => 'USPS',
+                            ]),
 
                         Textarea::make('notes')
+                            ->label(__('resource.shared.fields.notes'))
                             ->columnSpanFull(),
                     ])->columns(2),
 
-                    Section::make('Order Items')->schema([
+                    Section::make(__('resource.shared.sections.order_items'))->schema([
                         Repeater::make('items')
+                            ->label(__('resource.shared.fields.items'))
                             ->relationship()
                             ->schema([
                                 Select::make('product_id')
+                                    ->label(__('resource.shared.fields.item'))
                                     ->relationship('product', 'name')
                                     ->searchable()
                                     ->preload()
@@ -158,6 +170,7 @@ class OrderResource extends Resource
                                     }),
 
                                 TextInput::make('quantity')
+                                    ->label(__('resource.shared.fields.quantity'))
                                     ->required()
                                     ->numeric()
                                     ->default(1)
@@ -167,6 +180,7 @@ class OrderResource extends Resource
                                     ->afterStateUpdated(fn($state, Set $set, Get $get) => $set('total_amount', $state * $get('unit_amount'))),
 
                                 TextInput::make('unit_amount')
+                                    ->label(__('resource.shared.fields.unit_amount'))
                                     ->required()
                                     ->numeric()
                                     ->disabled()
@@ -174,6 +188,7 @@ class OrderResource extends Resource
                                     ->columnSpan(3),
 
                                 TextInput::make('total_amount')
+                                    ->label(__('resource.shared.fields.total_amount'))
                                     ->required()
                                     ->numeric()
                                     ->disabled()
@@ -184,7 +199,7 @@ class OrderResource extends Resource
 
                         Group::make()->schema([
                             Placeholder::make('grand_total_placeholder')
-                                ->label('Grand Total')
+                                ->label(__('resource.shared.fields.grand_total'))
                                 ->content(function (Get $get, Set $set) {
                                     $items = $get('items') ?? [];
 
@@ -216,13 +231,21 @@ class OrderResource extends Resource
                 TextColumn::make('created_at')
                     ->label(__('resource.shared.fields.created_at'))
                     ->sortable()
-                    ->dateTime()
+                    ->formatStateUsing(
+                        fn($state) => $state
+                        ? \Carbon\Carbon::parse($state)->translatedFormat('d F, Y H:i:s')
+                        : null
+                    )
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('updated_at')
                     ->label(__('resource.shared.fields.updated_at'))
                     ->sortable()
-                    ->dateTime()
+                    ->formatStateUsing(
+                        fn($state) => $state
+                        ? \Carbon\Carbon::parse($state)->translatedFormat('d F, Y H:i:s')
+                        : null
+                    )
                     ->toggleable(isToggledHiddenByDefault: true),
 
                 TextColumn::make('user.name')

@@ -31,7 +31,19 @@ return [
             'grand_total' => 'Total general',
             'currency' => 'Vulta',
             'shipping_method' => 'Metoda de livrare',
-
+            'notes' => 'Comentarii',
+            'items' => 'Produse',
+            'item' => 'Produsul',
+            'quantity' => 'Cantitate',
+            'unit_amount' => 'Preț unitar',
+            'total_amount' => 'Suma totală',
+            'full_name' => 'Nume complet',
+            'first_name' => 'Prenume',
+            'last_name' => 'Nume de familie',
+            'phone' => 'Telefon',
+            'city' => 'Oraș',
+            'state' => 'Stat / Regiune',
+            'zip_code' => 'Cod poștal',
         ],
         'bulk' => [
             'delete' => 'Șterge selecția',
@@ -41,10 +53,13 @@ return [
         ],
         'sections' => [
             'product_information' => 'Informații produs',
+            'order_information' => 'Detaliile comenzii',
+            'order_items' => 'Produsele comandate',
             'price' => 'Preț',
             'associations' => 'Asocieri',
             'images' => 'Imagini',
             'status' => 'Stare',
+            'address' => 'Adresa',
         ],
         'navigation' => [
             'content' => 'Conținut',
@@ -72,6 +87,12 @@ return [
         'title' => [
             'singular' => 'utilizator',
             'plural' => 'Utilizatori',
+        ],
+    ],
+    'address' => [
+        'title' => [
+            'singular' => 'adresă',
+            'plural' => 'Adrese',
         ],
     ],
     'order' => [

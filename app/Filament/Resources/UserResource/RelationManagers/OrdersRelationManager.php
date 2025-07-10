@@ -42,7 +42,11 @@ class OrdersRelationManager extends RelationManager
 
                 TextColumn::make('created_at')
                     ->label(__('resource.shared.fields.created_at'))
-                    ->dateTime()
+                    ->formatStateUsing(
+                        fn($state) => $state
+                        ? \Carbon\Carbon::parse($state)->translatedFormat('d F, Y H:i:s')
+                        : null
+                    )
                     ->sortable(),
 
                 TextColumn::make('user.name')
@@ -71,6 +75,7 @@ class OrdersRelationManager extends RelationManager
 
                 TextColumn::make('payment_method')
                     ->label(__('resource.shared.fields.payment_method'))
+                    ->formatStateUsing(fn(string $state) => __('resource.order.payment_method.' . $state))
                     ->searchable()
                     ->sortable(),
 
