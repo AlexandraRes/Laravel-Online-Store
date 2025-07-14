@@ -228,6 +228,11 @@ class OrderResource extends Resource
         return $table
             ->defaultSort('created_at', 'desc')
             ->columns([
+
+                TextColumn::make('id')
+                    ->label(__('resource.shared.fields.id'))
+                    ->searchable(),
+
                 TextColumn::make('created_at')
                     ->label(__('resource.shared.fields.created_at'))
                     ->sortable()
@@ -260,7 +265,7 @@ class OrderResource extends Resource
 
                 TextColumn::make('payment_method')
                     ->label(__('resource.shared.fields.payment_method'))
-                    ->formatStateUsing(fn(string $state) => __('resource.order.payment_method.' . $state))
+                    ->formatStateUsing(fn($state): string => __('resource.order.payment_method.' . $state))
                     ->sortable()
                     ->toggleable(isToggledHiddenByDefault: true),
 
@@ -277,6 +282,7 @@ class OrderResource extends Resource
                         'paid' => 'heroicon-m-check-badge',
                         'failed' => 'heroicon-m-x-circle',
                     })
+                    ->badge()
                     ->sortable(),
 
                 TextColumn::make('currency')

@@ -52,6 +52,7 @@ return [
             'delete_success' => 'Selected records were successfully deleted.',
         ],
         'sections' => [
+            'latest_orders' => 'Latest orders',
             'product_information' => 'Product Information',
             'order_information' => 'Order Information',
             'order_items' => 'Ordered Items',
@@ -102,6 +103,7 @@ return [
         ],
         'new_order' => 'New order',
         'status' => [
+            'all' => 'All',
             'new' => 'New',
             'processing' => 'Processing',
             'shipped' => 'Shipped',
@@ -116,6 +118,21 @@ return [
         'payment_method' => [
             'cod' => 'Cash On Delivery',
             'stripe' => 'Stripe',
+        ],
+        'widget' => [
+            'order_stats' => [
+                'heading' => 'Order information',
+                'description' => 'The widgets below provide, concise information about order statuses.',
+                'new_orders' => 'New Orders',
+                'new_orders_description' => 'Orders must be processed until 12:00',
+                'processing_orders' => 'Processing Orders',
+                'shipped_orders' => 'Shipped Orders',
+            ],
+            'second_order_stats' => [
+                'heading' => 'Profit information',
+                'description' => 'The widgets below provide, information about profit for entire period.',
+                'profit' => 'Profit',
+            ]
         ],
     ],
 ];

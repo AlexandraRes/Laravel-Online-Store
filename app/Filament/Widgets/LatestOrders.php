@@ -21,24 +21,32 @@ class LatestOrders extends BaseWidget
     public function table(Table $table): Table
     {
         return $table
+            ->heading(__('resource.shared.sections.latest_orders'))
             ->query(OrderResource::getEloquentQuery())
             ->defaultPaginationPageOption(5)
             ->defaultSort('created_at', 'desc')
             ->columns([
 
                 TextColumn::make('id')
-                    ->label('Order ID')
+                    ->label(__('resource.shared.fields.id'))
                     ->searchable(),
 
                 TextColumn::make('user.name')
+                    ->label(__('resource.shared.fields.user_name'))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable(),
+                    ->label(__('resource.shared.fields.created_at'))
+                    ->sortable()
+                    ->formatStateUsing(
+                        fn($state) => $state
+                        ? \Carbon\Carbon::parse($state)->translatedFormat('d F, Y H:i:s')
+                        : null
+                    ),
 
                 TextColumn::make('status')
+                    ->label(__('resource.shared.fields.status'))
                     ->sortable()
                     ->badge()
                     ->color(fn(string $state): string => match ($state) {
@@ -53,17 +61,17 @@ class LatestOrders extends BaseWidget
                         'shipped' => 'heroicon-m-truck',
                         'delivered' => 'heroicon-m-check-badge',
                         'canceled' => 'heroicon-m-x-circle',
-                    }),
+                    })
+                    ->formatStateUsing(fn(string $state): string => __('resource.order.status.' . $state)),
 
                 TextColumn::make('payment_method')
-                    ->formatStateUsing(fn($state) => [
-                        'cod' => 'Cash On Delivery',
-                        'stripe' => 'Stripe',
-                    ][$state] ?? $state)
+                    ->label(__('resource.shared.fields.payment_method'))
+                    ->formatStateUsing(fn($state): string => __('resource.order.payment_method.' . $state))
                     ->searchable()
                     ->sortable(),
 
                 TextColumn::make('payment_status')
+                    ->label(__('resource.shared.fields.payment_status'))
                     ->searchable()
                     ->sortable()
                     ->badge()
@@ -76,9 +84,11 @@ class LatestOrders extends BaseWidget
                         'pending' => 'heroicon-m-arrow-path',
                         'paid' => 'heroicon-m-check-badge',
                         'failed' => 'heroicon-m-x-circle',
-                    }),
+                    })
+                    ->formatStateUsing(fn(string $state): string => __('resource.order.payment_status.' . $state)),
 
                 TextColumn::make('grand_total')
+                    ->label(__('resource.shared.fields.grand_total'))
                     ->numeric()
                     ->money('MDL')
                     ->sortable()
@@ -92,7 +102,8 @@ class LatestOrders extends BaseWidget
                         return route('filament.admin.resources.orders.edit', ['record' => $record->getKey()]);
 
                     })
-                    ->openUrlInNewTab(false),
+                    ->openUrlInNewTab(false)
+                    ->color('success'),
 
                 DeleteAction::make(),
             ]);

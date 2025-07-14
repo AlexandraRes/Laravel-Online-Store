@@ -52,6 +52,7 @@ return [
             'delete_success' => 'Înregistrările selectate au fost șterse cu succes.',
         ],
         'sections' => [
+            'latest_orders' => 'Ultimele comenzi',
             'product_information' => 'Informații produs',
             'order_information' => 'Detaliile comenzii',
             'order_items' => 'Produsele comandate',
@@ -102,6 +103,7 @@ return [
         ],
         'new_order' => 'Comandă nouă',
         'status' => [
+            'all' => 'Toate',
             'new' => 'Nou',
             'processing' => 'În procesare',
             'shipped' => 'Expediat',
@@ -116,6 +118,21 @@ return [
         'payment_method' => [
             'cod' => 'Plată la livrare',
             'stripe' => 'Stripe',
+        ],
+        'widget' => [
+            'order_stats' => [
+                'heading' => 'Informații despre comenzi',
+                'description' => 'Widgeturile de mai jos oferă informații concise despre statusurile comenzilor.',
+                'new_orders' => 'Comenzi noi',
+                'new_orders_description' => 'Comenzile trebuie procesate până la ora 12:00',
+                'processing_orders' => 'Comenzi în procesare',
+                'shipped_orders' => 'Comenzi expediate',
+            ],
+            'second_order_stats' => [
+                'heading' => 'Informații despre profit',
+                'description' => 'Widgeturile de mai jos oferă informații despre profitul pentru întreaga perioadă.',
+                'profit' => 'Profit',
+            ]
         ],
     ],
 ];

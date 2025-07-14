@@ -22,7 +22,7 @@ class ListOrders extends ListRecords
     {
         return [
             Actions\CreateAction::make()
-            ->icon('heroicon-o-plus-circle'),
+                ->icon('heroicon-o-plus-circle'),
 
         ];
     }
@@ -38,12 +38,12 @@ class ListOrders extends ListRecords
     public function getTabs(): array
     {
         return [
-            null => Tab::make('All'),
-            'New' => Tab::make()->query(fn($query) => $query->where('status', 'new')),
-            'Processing' => Tab::make()->query(fn($query) => $query->where('status', 'processing')),
-            'Shipped' => Tab::make()->query(fn($query) => $query->where('status', 'shipped')),
-            'Delivered' => Tab::make()->query(fn($query) => $query->where('status', 'delivered')),
-            'Canceled' => Tab::make()->query(fn($query) => $query->where('status', 'canceled')),
+            null => Tab::make(__('resource.order.status.all')),
+            __('resource.order.status.new') => Tab::make()->query(fn($query) => $query->where('status', __('new'))),
+            __('resource.order.status.processing') => Tab::make()->query(fn($query) => $query->where('status', 'processing')),
+            __('resource.order.status.shipped') => Tab::make()->query(fn($query) => $query->where('status', 'shipped')),
+            __('resource.order.status.delivered') => Tab::make()->query(fn($query) => $query->where('status', 'delivered')),
+            __('resource.order.status.canceled') => Tab::make()->query(fn($query) => $query->where('status', 'canceled')),
         ];
     }
 }

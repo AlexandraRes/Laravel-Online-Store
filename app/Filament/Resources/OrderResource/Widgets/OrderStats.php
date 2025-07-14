@@ -9,21 +9,27 @@ use Illuminate\Support\Number;
 
 class OrderStats extends BaseWidget
 {
-    protected ?string $heading = 'Order information';
+    protected function getHeading(): ?string
+    {
+        return __('resource.order.widget.order_stats.heading');
+    }
 
-    protected ?string $description = 'The widgets below provide, concise information about order statuses.';
+    protected function getDescription(): ?string
+    {
+        return __('resource.order.widget.order_stats.description');
+    }
 
     protected function getStats(): array
     {
-
         return [
-            Stat::make('New Orders', Order::query()->where('status', 'new')->count())
-                ->description('Orders must be processed until 12:00')
+            Stat::make(__('resource.order.widget.order_stats.new_orders'), Order::query()->where('status', 'new')->count())
+                ->description(__('resource.order.widget.order_stats.new_orders_description'))
                 ->descriptionIcon('heroicon-m-clock')
                 ->color('warning'),
 
-            Stat::make('Processing Orders', Order::query()->where('status', 'processing')->count()),
-            Stat::make('Shipped Orders', Order::query()->where('status', 'processing')->count()),
+            Stat::make(__('resource.order.widget.order_stats.processing_orders'), Order::query()->where('status', 'processing')->count()),
+
+            Stat::make(__('resource.order.widget.order_stats.shipped_orders'), Order::query()->where('status', 'shipped')->count()),
         ];
     }
 

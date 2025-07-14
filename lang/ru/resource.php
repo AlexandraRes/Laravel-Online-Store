@@ -52,6 +52,7 @@ return [
             'delete_success' => 'Выбранные записи успешно удалены.',
         ],
         'sections' => [
+            'latest_orders' => 'Последние заказы',
             'product_information' => 'Информация о товаре',
             'order_information' => 'Детали заказа',
             'order_items' => 'Заказанные товары',
@@ -102,6 +103,7 @@ return [
         ],
         'new_order' => 'Новый заказ',
         'status' => [
+            'all' => 'Все',
             'new' => 'Новый',
             'processing' => 'В обработке',
             'shipped' => 'Отправлен',
@@ -117,6 +119,20 @@ return [
             'cod' => 'Наличными при доставке',
             'stripe' => 'Stripe',
         ],
-
+        'widget' => [
+            'order_stats' => [
+                'heading' => 'Информация о заказах',
+                'description' => 'Виджеты ниже предоставляют краткую информацию о статусах заказов.',
+                'new_orders' => 'Новые заказы',
+                'new_orders_description' => 'Заказы должны быть обработаны до 12:00',
+                'processing_orders' => 'Заказы в обработке',
+                'shipped_orders' => 'Отгруженные заказы',
+            ],
+            'second_order_stats' => [
+                'heading' => 'Информация о прибыли',
+                'description' => 'Виджеты ниже предоставляют информацию о прибыли за весь период.',
+                'profit' => 'Прибыль',
+            ]
+        ],
     ],
 ];
