@@ -5,10 +5,13 @@ namespace App\Filament\Resources\OrderResource\Widgets;
 use App\Models\Order;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
-use Illuminate\Support\Number;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+
 
 class OrderStats extends BaseWidget
 {
+    use HasWidgetShield;
+
     protected function getHeading(): ?string
     {
         return __('resource.order.widget.order_stats.heading');

@@ -6,10 +6,13 @@ use App\Models\Order;
 use Filament\Widgets\StatsOverviewWidget as BaseWidget;
 use Filament\Widgets\StatsOverviewWidget\Stat;
 use Illuminate\Support\Number;
-use League\CommonMark\Extension\DescriptionList\Node\Description;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+
 
 class SecondOrderStats extends BaseWidget
 {
+    use HasWidgetShield;
+
     protected function getHeading(): ?string
     {
         return __('resource.order.widget.second_order_stats.heading');

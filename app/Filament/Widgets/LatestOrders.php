@@ -10,18 +10,28 @@ use Filament\Tables\Actions\EditAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
 use Filament\Widgets\TableWidget as BaseWidget;
+use BezhanSalleh\FilamentShield\Traits\HasWidgetShield;
+
+
 
 class LatestOrders extends BaseWidget
 {
+
+    use HasWidgetShield;
 
     protected int|string|array $columnSpan = 'full';
 
     protected static ?int $sort = 2;
 
+    protected function getTableHeading(): string
+    {
+        return __('resource.shared.sections.latest_orders');
+    }
+
     public function table(Table $table): Table
     {
         return $table
-            ->heading(__('resource.shared.sections.latest_orders'))
+            ->heading($this->getTableHeading())
             ->query(OrderResource::getEloquentQuery())
             ->defaultPaginationPageOption(5)
             ->defaultSort('created_at', 'desc')
@@ -96,6 +106,7 @@ class LatestOrders extends BaseWidget
             ->actions([
 
                 EditAction::make()
+                    ->visible(fn() => auth()->user()->can('update_order'))
                     ->url(function ($record) {
 
                         session()->put('orders.return_url', url()->previous());
@@ -103,9 +114,13 @@ class LatestOrders extends BaseWidget
 
                     })
                     ->openUrlInNewTab(false)
-                    ->color('success'),
+                    ->color('success')
+                    ->label(__('resource.shared.fields.edit')),
 
-                DeleteAction::make(),
+                DeleteAction::make()
+                    ->visible(fn() => auth()->user()->can('delete_order'))
+                    ->label(__('resource.shared.fields.delete')),
+
             ]);
     }
 }

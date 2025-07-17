@@ -24,12 +24,27 @@ use Filament\Tables\Actions\ViewAction;
 use Filament\Tables\Actions\DeleteAction;
 use Filament\Tables\Actions\EditAction;
 use Filament\Resources\RelationManagers\Concerns\Translatable;
+use BezhanSalleh\FilamentShield\Contracts\HasShieldPermissions;
+use Illuminate\Support\Str;
+use Illuminate\Database\Eloquent\Model;
 
-
-class UserResource extends Resource
+class UserResource extends Resource implements HasShieldPermissions
 {
 
     use Translatable;
+
+    public static function getPermissionPrefixes(): array
+    {
+        return [
+            'view',
+            'view_any',
+            'create',
+            'update',
+            'update_self',
+            'delete',
+            'delete_any',
+        ];
+    }
 
     protected static ?string $model = User::class;
 
@@ -55,7 +70,8 @@ class UserResource extends Resource
             ->schema([
                 TextInput::make('name')
                     ->label(__('resource.shared.fields.name'))
-                    ->required(),
+                    ->required()
+                    ->columnSpanFull(),
 
                 TextInput::make('email')
                     ->label(__('resource.shared.fields.email'))
@@ -73,6 +89,23 @@ class UserResource extends Resource
                     ->password()
                     ->dehydrated(fn($state) => filled($state))
                     ->required(fn(Page $livewire): bool => $livewire instanceof CreateRecord)
+                    ->minLength(6)
+                    ->columnSpanFull(),
+
+                Forms\Components\Select::make('roles')
+                    ->label(__('filament-shield::filament-shield.resource.label.roles'))
+                    ->visible(fn() => auth()->user()->can('update_role'))
+                    ->relationship(
+                        name: 'roles',
+                        titleAttribute: 'name',
+                    )
+                    ->getOptionLabelFromRecordUsing(fn(Model $record) => Str::headline($record->name))
+                    ->suffixIcon('heroicon-o-shield-check')
+                    ->suffixIconColor('warning')
+                    ->multiple()
+                    ->preload()
+                    ->searchable()
+                    ->columnSpanFull(),
             ]);
     }
 

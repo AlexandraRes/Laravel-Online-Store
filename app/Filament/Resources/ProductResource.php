@@ -111,8 +111,7 @@ class ProductResource extends Resource
                             ->relationship('brand', 'name')
                     ]),
 
-                ])->columnSpan(1)
-                    ->extraAttributes(['class' => 'h-full flex']),
+                ])->columnSpan(1),
 
                 Group::make()->schema([
                     Section::make(__('resource.shared.sections.images'))->schema([
@@ -122,7 +121,6 @@ class ProductResource extends Resource
                             ->directory('products')
                             ->maxFiles(5)
                             ->reorderable(),
-
                     ])
                 ])->columnSpan(2),
 
